@@ -1,3 +1,5 @@
+import Node from './models/Node';
+
 type Props = {
   tree: Node | null;
 };
