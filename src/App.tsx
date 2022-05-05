@@ -21,35 +21,58 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Form
-        name="treeForm"
-        onFinish={handleCreateTree}>
-        <Input.Group compact>
-          <StyledFormItem
-            name="treeEncoding"
-            rules={[
-              {
-                required: true,
-                message: 'level-order tree traversal is required for viz'
-              },
-              {
-                pattern: levelOrderRegex,
-                message: 'format must be [Number|null, ..., Number|null]',
-              }
-            ]}>
-              <Input defaultValue={"[3, 9, 7, 2, 6, null, 4]"} />
-            </StyledFormItem>
-            <Button type="primary" htmlType="submit">Create Tree</Button>
-        </Input.Group>
-      </Form>
+    <StyledApp>
+      <InputColumn>
+        <Form
+          name="treeForm"
+          onFinish={handleCreateTree}>
+          <Input.Group compact>
+            <StyledFormItem
+              name="treeEncoding"
+              rules={[
+                {
+                  required: true,
+                  message: 'level-order tree traversal is required for viz'
+                },
+                {
+                  pattern: levelOrderRegex,
+                  message: 'format must be [Number|null, ..., Number|null]',
+                }
+              ]}>
+                <Input placeholder='level-order encoded binary tree' />
+              </StyledFormItem>
+              <StyledButton type="primary" htmlType="submit">Create Tree</StyledButton>
+          </Input.Group>
+        </Form>
+      </InputColumn>
       <TreeView tree={rootNode} />
-    </div>
+    </StyledApp>
   );
 }
 
+const StyledApp = styled.div`
+  display: grid;
+  grid-template-columns: 20vw auto;
+  column-gap: 10%;
+
+  margin: 100px;
+  border: solid 1px grey;
+  min-height: calc(100vh - 200px);
+  padding: 20px;
+  border-radius: 20px;
+`;
+
 const StyledFormItem = styled(Form.Item)`
-  width: 400px;
+  width: 70%;
+`;
+
+const StyledButton = styled(Button)`
+  width: 30%;
+`
+
+const InputColumn = styled.div`
+grid-column: 1;
+grid-row: auto;
 `;
 
 export default App;

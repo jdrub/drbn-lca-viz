@@ -12,9 +12,6 @@ const TreeView = (props: Props) => {
   const treeDepth = getTreeDepth(props.tree);
   const numColumns = Math.pow(2, treeDepth) - 1;
 
-  console.log('treeDepth: ', treeDepth);
-  console.log('numColumns: ', numColumns);
-
   const treeNodes = getTreeNodes(props.tree, numColumns, treeDepth);
 
   return (
@@ -130,6 +127,8 @@ const TreeNode = styled.div<TreeNodeProps>`
   
   width: 100px;
   height: 100px;
+
+  margin: auto;
 
   & > * {
     // center child
