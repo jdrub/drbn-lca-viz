@@ -42,12 +42,11 @@ const getTreeNodes = (tree: Node | null, numColumns: number, numLvls: number): (
     if (n.node !== null)
     {
       treeNodes.push((
-        <TreeNode
-          $column={n.column}
-          $row={n.level}
-        >
-          <span>{n.node.value}</span>
-        </TreeNode>
+        <TreeNodeWrapper $column={n.column} $row={n.level}>
+          <TreeNode>
+            <span>{n.node.value}</span>
+          </TreeNode>
+        </TreeNodeWrapper>
       ));
     }
 
@@ -110,24 +109,30 @@ const Wrapper = styled.div<WrapperProps>`
   display: grid;
   grid-template-columns: repeat(${p => p.$numColumns}, 1fr);
   grid-template-rows: repeat(${p => p.$numRows}, 1fr);
+  grid-auto-rows: minmax(auto, 100px);
+  grid-auto-columns: minmax(auto, 100px);
 
   row-gap: 10px;
   column-gap: 10px;
+
+  align-items: center;
 `;
 
-const TreeNode = styled.div<TreeNodeProps>`
+const TreeNodeWrapper = styled.div<TreeNodeProps>`
   grid-column: ${p => p.$column};
   grid-row: ${p => p.$row};
+  position: relative;
+`;
 
+const TreeNode = styled.div`
   position: relative;
   
   background-color: grey;
   color: white;
   border-radius: 50%;
-  
-  width: 100px;
-  height: 100px;
 
+  padding-bottom: 50%;
+  width: 50%;
   margin: auto;
 
   & > * {
