@@ -8,16 +8,17 @@ import Node, { parseTreeString, deserializeBT, getLCA } from './models/Node';
 const levelOrderRegex = /^\[(([0-9]|null)+,[ ]*)*[0-9]+\]$/;
 
 interface CreateTreeInputValues {
-  treeEncoding: string
+  treeEncoding: string;
 }
 
 interface FindLcaInputValuse {
-  node1: string
-  node2: string
+  node1: string;
+  node2: string;
 }
 
 function App() {
   const [rootNode, setRootNode] = useState<Node|null>(null);
+  const [lcaNode, setLcaNode] = useState<Node | null>(null);
 
   const handleCreateTree = ({ treeEncoding } : CreateTreeInputValues) => {
     const parsedStr = parseTreeString(treeEncoding);
@@ -27,7 +28,7 @@ function App() {
 
   const handleLcaSubmit = ({ node1, node2 }: FindLcaInputValuse) => {
     const lca = getLCA(rootNode, Number(node1), Number(node2));
-    console.log('LCA: ', lca);
+    setLcaNode(lca);
   };
 
   return (
@@ -94,7 +95,7 @@ function App() {
           </Input.Group>
         </Form>
       </InputColumn>
-      <TreeView tree={rootNode} />
+      <TreeView tree={rootNode} lca={lcaNode}/>
     </StyledApp>
   );
 }

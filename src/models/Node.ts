@@ -54,15 +54,15 @@ export const getTreeDepth = (node : Node | null): number => {
   return 1 + Math.max(getTreeDepth(node.left), getTreeDepth(node.right));
 }
 
-export const getLCA = (node: Node | null, val1: number, val2: number): (number | null) => {
+export const getLCA = (node: Node | null, val1: number, val2: number): (Node | null) => {
   const lcaDto = findLca(node, val1, val2);
 
   return lcaDto?.lca || null;
 }
 
 interface LcaDto {
-  lca: number | undefined,
-  foundOneVal: boolean,
+  lca: Node | undefined;
+  foundOneVal: boolean;
 }
 
 const findLca = (currNode: Node | null, val1: number, val2: number): LcaDto | null => {
@@ -88,7 +88,7 @@ const findLca = (currNode: Node | null, val1: number, val2: number): LcaDto | nu
   ) {
     // curr node is lca
     return {
-      lca: currNode.value,
+      lca: currNode,
       foundOneVal: true, // doesn't matter
     };
   }

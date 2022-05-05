@@ -5,6 +5,7 @@ import { ReactElement } from 'react';
 
 type Props = {
   tree: Node | null;
+  lca: Node | null;
 };
 
 const TreeView = (props: Props) => {
@@ -12,7 +13,7 @@ const TreeView = (props: Props) => {
   const treeDepth = getTreeDepth(props.tree);
   const numColumns = Math.pow(2, treeDepth) - 1;
 
-  const treeNodes = getTreeNodes(props.tree, numColumns, treeDepth);
+  const treeNodes = getTreeNodes(props.tree, numColumns, treeDepth, props.lca);
 
   return (
     <Wrapper $numColumns={numColumns} $numRows={treeDepth}>
@@ -21,7 +22,7 @@ const TreeView = (props: Props) => {
   );
 };
 
-const getTreeNodes = (tree: Node | null, numColumns: number, numLvls: number): (ReactElement|undefined)[] => {
+const getTreeNodes = (tree: Node | null, numColumns: number, numLvls: number, lca: Node | null): (ReactElement|undefined)[] => {
   const treeNodes: ReactElement[] = [];
 
   // bfs (level-order) traversal
@@ -43,7 +44,7 @@ const getTreeNodes = (tree: Node | null, numColumns: number, numLvls: number): (
     {
       treeNodes.push((
         <TreeNodeWrapper $column={n.column} $row={n.level}>
-          <TreeNode>
+          <TreeNode $isLcaNode={lca?.value === n.node.value}>
             <span>{n.node.value}</span>
           </TreeNode>
         </TreeNodeWrapper>
@@ -90,19 +91,23 @@ const getChildColumnIncrement = (totalLvls: number, nextLvl: number): number => 
 }
 
 interface TreeNodeQueueEntry {
-  node: Node | null,
-  level: number,
-  column: number
+  node: Node | null;
+  level: number;
+  column: number;
 }
 
 interface WrapperProps {
-  readonly $numColumns: number,
-  readonly $numRows: number
+  $numColumns: number;
+  $numRows: number;
+}
+
+interface TreeNodeWrapperProps {
+  $column: number;
+  $row: number;
 }
 
 interface TreeNodeProps {
-  $column: number,
-  $row: number
+  $isLcaNode: boolean;
 }
 
 const Wrapper = styled.div<WrapperProps>`
@@ -118,16 +123,16 @@ const Wrapper = styled.div<WrapperProps>`
   align-items: center;
 `;
 
-const TreeNodeWrapper = styled.div<TreeNodeProps>`
+const TreeNodeWrapper = styled.div<TreeNodeWrapperProps>`
   grid-column: ${p => p.$column};
   grid-row: ${p => p.$row};
   position: relative;
 `;
 
-const TreeNode = styled.div`
+const TreeNode = styled.div<TreeNodeProps>`
   position: relative;
   
-  background-color: grey;
+  background-color: ${p => p.$isLcaNode ? 'green' : 'grey'};
   color: white;
   border-radius: 50%;
 
