@@ -3,22 +3,32 @@ import TreeView from './Tree';
 import { Button, Input, Form } from 'antd';
 import styled from 'styled-components';
 import { useState } from 'react';
-import Node, { parseTreeString, deserializeBT } from './models/Node';
+import Node, { parseTreeString, deserializeBT, getLCA } from './models/Node';
 
 const levelOrderRegex = /^\[(([0-9]|null)+,[ ]*)*[0-9]+\]$/;
 
-interface InputValues {
+interface CreateTreeInputValues {
   treeEncoding: string
+}
+
+interface FindLcaInputValuse {
+  node1: string
+  node2: string
 }
 
 function App() {
   const [rootNode, setRootNode] = useState<Node|null>(null);
 
-  const handleCreateTree = ({ treeEncoding } : InputValues) => {
+  const handleCreateTree = ({ treeEncoding } : CreateTreeInputValues) => {
     const parsedStr = parseTreeString(treeEncoding);
     const treeRootNode = deserializeBT(parsedStr);
     setRootNode(treeRootNode);
   }
+
+  const handleLcaSubmit = ({ node1, node2 }: FindLcaInputValuse) => {
+    const lca = getLCA(rootNode, Number(node1), Number(node2));
+    console.log('LCA: ', lca);
+  };
 
   return (
     <StyledApp>
@@ -41,7 +51,46 @@ function App() {
               ]}>
                 <Input placeholder='level-order encoded binary tree' />
               </StyledFormItem>
-              <StyledButton type="primary" htmlType="submit">Create Tree</StyledButton>
+              <CreateTreeButton type="primary" htmlType="submit">Create Tree</CreateTreeButton>
+          </Input.Group>
+        </Form>
+        <Break />
+        <Form
+          name="lcaForm"
+          onFinish={handleLcaSubmit}>
+          <Input.Group compact>
+            <StyledFormItem
+              name="node1"
+              rules={[
+                {
+                  required: true,
+                  message: 'must enter node value'
+                },
+                {
+                  pattern: /^[0-9]+$/,
+                  message: 'must be a number',
+                }
+              ]}>
+                <Input placeholder='Node 1' />
+              </StyledFormItem>
+          </Input.Group>
+          <Input.Group compact>
+            <StyledFormItem
+              name="node2"
+              rules={[
+                {
+                  required: true,
+                  message: 'must enter node value'
+                },
+                {
+                  pattern: /^[0-9]+$/,
+                  message: 'must be a number',
+                }
+              ]}>
+                <Input placeholder='Node 2' />
+              </StyledFormItem>
+              
+              <FindLcaButton type="primary" htmlType="submit">Find LCA</FindLcaButton>
           </Input.Group>
         </Form>
       </InputColumn>
@@ -63,16 +112,24 @@ const StyledApp = styled.div`
 `;
 
 const StyledFormItem = styled(Form.Item)`
-  width: 70%;
+  width: 100%;
 `;
 
-const StyledButton = styled(Button)`
+const CreateTreeButton = styled(Button)`
   width: 30%;
 `
 
+const FindLcaButton = styled(Button)`
+  width: 30%;
+`;
+
 const InputColumn = styled.div`
-grid-column: 1;
-grid-row: auto;
+  grid-column: 1;
+  grid-row: auto;
+`;
+
+const Break = styled.br`
+  margin-top: 20px;
 `;
 
 export default App;
