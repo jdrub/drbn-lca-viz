@@ -47,3 +47,9 @@ export default class Node {
     this.value = val;
   }
 }
+
+export const getTreeDepth = (node : Node | null): number => {
+  if (node === null) return 0;
+
+  return 1 + Math.max(getTreeDepth(node.left), getTreeDepth(node.right));
+}
