@@ -22,10 +22,15 @@ const TreeView = (props: Props) => {
   );
 };
 
+interface TreeNodeQueueEntry {
+  node: Node | null;
+  level: number;
+  column: number;
+}
+
 const getTreeNodes = (tree: Node | null, numColumns: number, numLvls: number, lca: Node | null): (ReactElement|undefined)[] => {
   const treeNodes: ReactElement[] = [];
 
-  // bfs (level-order) traversal
   if (tree === null) return [undefined];
 
   const nodeQueue: TreeNodeQueueEntry[] = [
@@ -36,6 +41,7 @@ const getTreeNodes = (tree: Node | null, numColumns: number, numLvls: number, lc
     }
   ];
 
+  // bfs (level-order) traversal to create react element array
   while (nodeQueue.length > 0)
   {
     const n = nodeQueue.shift()!;
@@ -74,6 +80,8 @@ const getTreeNodes = (tree: Node | null, numColumns: number, numLvls: number, lc
   return treeNodes;
 }
 
+// returns the number of columns to increment either left or right when deciding
+// where to place a child node relative to itself
 const getChildColumnIncrement = (totalLvls: number, nextLvl: number): number => {
   
     /*
@@ -90,24 +98,9 @@ const getChildColumnIncrement = (totalLvls: number, nextLvl: number): number => 
     return Math.pow(2, totalLvls - nextLvl);
 }
 
-interface TreeNodeQueueEntry {
-  node: Node | null;
-  level: number;
-  column: number;
-}
-
 interface WrapperProps {
   $numColumns: number;
   $numRows: number;
-}
-
-interface TreeNodeWrapperProps {
-  $column: number;
-  $row: number;
-}
-
-interface TreeNodeProps {
-  $isLcaNode: boolean;
 }
 
 const Wrapper = styled.div<WrapperProps>`
@@ -123,11 +116,20 @@ const Wrapper = styled.div<WrapperProps>`
   align-items: center;
 `;
 
+interface TreeNodeWrapperProps {
+  $column: number;
+  $row: number;
+}
+
 const TreeNodeWrapper = styled.div<TreeNodeWrapperProps>`
   grid-column: ${p => p.$column};
   grid-row: ${p => p.$row};
   position: relative;
 `;
+
+interface TreeNodeProps {
+  $isLcaNode: boolean;
+}
 
 const TreeNode = styled.div<TreeNodeProps>`
   position: relative;
