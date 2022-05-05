@@ -1,3 +1,16 @@
+export const parseTreeString = (str: string): (number | null)[] => {
+  const noWhitespace = str.replace(/\s+/g, '');
+  const noBraces = noWhitespace.slice(1, -1);
+  const numOrNullArr = noBraces.split(',');
+
+  const typedArr: (number | null)[] =
+    numOrNullArr.map(val => val === 'null'
+      ? null
+      : Number(val));
+
+  return typedArr;
+}
+
 export const deserializeBT = (arr: (number | null)[]): Node | null => {
   if (!arr.length || arr[0] == null) {
     return null;

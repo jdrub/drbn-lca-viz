@@ -2,12 +2,29 @@ import './App.css';
 import TreeView from './Tree';
 import { Button, Input, Form } from 'antd';
 import styled from 'styled-components';
+import { useState } from 'react';
+import Node, { parseTreeString, deserializeBT } from './models/Node';
 
 const levelOrderRegex = /^\[(([0-9]|null)+,[ ]*)*[0-9]+\]$/;
+
+interface InputValues {
+  treeEncoding: string
+}
+
 function App() {
+  const [rootNode, setRootNode] = useState<Node|null>(null);
+
+  const handleCreateTree = ({ treeEncoding } : InputValues) => {
+    const parsedStr = parseTreeString(treeEncoding);
+    const treeRootNode = deserializeBT(parsedStr);
+    setRootNode(treeRootNode);
+  }
+
   return (
     <div className="App">
-      <Form name="treeForm">
+      <Form
+        name="treeForm"
+        onFinish={handleCreateTree}>
         <Input.Group compact>
           <StyledFormItem
             name="treeEncoding"
@@ -21,12 +38,12 @@ function App() {
                 message: 'format must be [Number|null, ..., Number|null]',
               }
             ]}>
-              <Input defaultValue="[3, 9, 7, 2, 6, null, 4]" />
+              <Input defaultValue={"[3, 9, 7, 2, 6, null, 4]"} />
             </StyledFormItem>
-            <Button type="primary">Create Tree</Button>
+            <Button type="primary" htmlType="submit">Create Tree</Button>
         </Input.Group>
       </Form>
-      <TreeView tree={null} />
+      <TreeView tree={rootNode} />
     </div>
   );
 }
