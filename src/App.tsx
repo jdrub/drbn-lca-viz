@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import Node, { parseTreeString, deserializeBT, getLCA } from './models/Node';
 
-const levelOrderRegex = /^\[(([0-9]|null)+,[ ]*)*[0-9]+\]$/;
+const levelOrderRegex = /^\[(([0-9]|null)+[ ]*,[ ]*)*[0-9]+[ ]*\]$/;
 
 interface CreateTreeInputValues {
   treeEncoding: string;
