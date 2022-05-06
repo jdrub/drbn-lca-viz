@@ -117,11 +117,11 @@ const StyledFormItem = styled(Form.Item)`
 `;
 
 const CreateTreeButton = styled(Button)`
-  width: 30%;
+  width: 100%;
 `
 
 const FindLcaButton = styled(Button)`
-  width: 30%;
+  width: 100%;
 `;
 
 const InputColumn = styled.div`
